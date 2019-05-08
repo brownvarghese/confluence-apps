@@ -67,11 +67,11 @@ The structure of the input source datasets are as follows:
 
 ![](/images/image3.png)
 
-##Transformation Step
+## Transformation Step
 
 In order to build our final collections/database, we had to perform the following data cleaning and data transformation activities:
 
-###Data Cleaning steps performed [Apps_Data_Extract.ipynb]:
+### Data Cleaning steps performed [Apps_Data_Extract.ipynb]:
 
 1.	Visual inspection of data 
 2.	Verified the file contents with the head () method. 
@@ -110,6 +110,6 @@ In order to build our final collections/database, we had to perform the followin
 5.	After these transformations, exported the transformed Apps Detail files as well as Apps Summary files (for both Apple Store and Google Play Store) back into a .csv file format.  These files were processed as input part of the ‘Load’ process.
 
 
-##Project Plan
+## Project Plan
 
 ![](/images/image4.png)
