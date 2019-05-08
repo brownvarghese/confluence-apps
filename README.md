@@ -22,10 +22,10 @@ The ever-changing mobile landscape is a challenging space to navigate.  The perc
         d.	Once script has run to success launch MongoDB Compass
         e.	Now you should  be able to see following DB and collections:
                     
-            •	Database:
+            • Database:
             Confluence_Apps
 
-            •	Collections: 
+            • Collections: 
             Android_Data.segment
             Apple_Data.segment
             Apple_Google_Summary.segment
@@ -33,7 +33,9 @@ The ever-changing mobile landscape is a challenging space to navigate.  The perc
 ## Narrative / Motivation
 
 We are providing a Database for the Mobile apps consumers – especially young adults and parents to make informed decisions about what apps to buy / download for various categories of apps from Google Play Store and Apple store, based on apps price, user rating and number of users (installs).
-Final Schema / Data Model / How to use the data
+
+## Final Schema / Data Model / How to use the data
+
 The process of data extraction and data transformation resulted in the following final data model, which was loaded on NoSQL database – Mongo DB. This data could have been loaded in a relational database like MySQL, as well.  But we choose to go with Mongo DB, because of the following reasons:
 
         1.	We wanted to learn more Mongo DB as we did not have prior experience.
@@ -41,17 +43,23 @@ The process of data extraction and data transformation resulted in the following
 
 The details are provided as follows.
 
-Google Play Store App Details(Android_Data.segment):  This collection in Mongo DB represents the Google Play Store App Details, after data cleaning and data wrangling.
+### Google Play Store App Details(Android_Data.segment):  
 
-Apple Store App Details(Apple_Data.segment):  This collection in Mongo DB represents the Apple Store App Details, after data cleaning and data wrangling.
+This collection in Mongo DB represents the Google Play Store App Details, after data cleaning and data wrangling.
 
-Data Table Structure for Android and Apple Data Collection:
+### Apple Store App Details(Apple_Data.segment):  
+
+This collection in Mongo DB represents the Apple Store App Details, after data cleaning and data wrangling.
+
+### Data Table Structure for Android and Apple Detailed Data Collection:
 
 ![](/images/image1.png)
 
-Apps Summary Details(Apple_Google_Summary.segment): This collection in Mongo DB represents the aggregated summary level details of apps, grouped at the level of App Store/Category / Type / Content Rating.  This provides valuable analytics like average user ratings, average price and Average users at an aggregate level.
+### Apps Summary Details(Apple_Google_Summary.segment): 
 
-Data Table Structure for Android and Google Summary Data collection:
+This collection in Mongo DB represents the aggregated summary level details of apps, grouped at the level of App Store/Category / Type / Content Rating.  This provides valuable analytics like average user ratings, average price and Average users at an aggregate level.
+
+### Data Table Structure for Android and Google Summary Data collection:
 
 ![](/images/image2.png)
 
@@ -67,47 +75,47 @@ The structure of the input source datasets are as follows:
 
 ![](/images/image3.png)
 
-## Transformation Step
+## Transformation Steps
 
 In order to build our final collections/database, we had to perform the following data cleaning and data transformation activities:
 
-### Data Cleaning steps performed [Apps_Data_Extract.ipynb]:
+### [1] Data Cleaning steps performed [Apps_Data_Extract.ipynb]:
 
-1.	Visual inspection of data 
-2.	Verified the file contents with the head () method. 
-3.	Dealt with missing data 
-    a.	Dropped columns that have a high incidence of missing data
-    b.	Added in default value for the missing columns
-    c.	Invoked Lambda function to replace any values other than Alphanumeric and special characters with SPACES. Application_Name field contained nonstandard characters as some of the apps were intended for non-English speaking audience. This step allowed further processing of file in Transform and Load processes.  
-4.	Removed incomplete rows
-    a.	Deleted any rows that have a missing value. This will avoid errors in the Transformation and Load process.
-    b.	Based on the utility of the final database, the structures of Apple app dataset and Google app dataset are aligned by bringing only selective columns into the dataframe.
-5.	Normalized data types
-    a.	Formatting columns to appropriate data type for father processing in Transformation and Load process. 
-    b.	Type ()
-6.	Renamed columns
-    a.	Rename columns to more user-friendly names. DataFrame.rename(columns = {})
-7.	Saved results
-    a.	After data clean-up, exported data back into CSV format for further processing in another program
+    1.	Visual inspection of data 
+    2.	Verified the file contents with the head () method. 
+    3.	Dealt with missing data 
+        a.	Dropped columns that have a high incidence of missing data
+        b.	Added in default value for the missing columns
+        c.	Invoked Lambda function to replace any values other than Alphanumeric and special characters with SPACES. Application_Name field contained nonstandard characters as some of the apps were intended for non-English speaking audience. This step allowed further processing of file in Transform and Load processes.  
+    4.	Removed incomplete rows
+        a.	Deleted any rows that have a missing value. This will avoid errors in the Transformation and Load process.
+        b.	Based on the utility of the final database, the structures of Apple app dataset and Google app dataset are aligned by bringing only selective columns into the dataframe.
+    5.	Normalized data types
+        a.	Formatting columns to appropriate data type for father processing in Transformation and Load process. 
+        b.	Type ()
+    6.	Renamed columns
+        a.	Rename columns to more user-friendly names. DataFrame.rename(columns = {})
+    7.	Saved results
+        a.	After data clean-up, exported data back into CSV format for further processing in another program
 
 
-###Data transformation steps performed [Apps_Data_transformation.ipynb]:
+### [2] Data transformation steps performed [Apps_Data_transformation.ipynb]:
 
-1.	The Apps categorization between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Category’ column based on Apple Store Category by executing  .replace command. See an example as follows:
+    1.	The Apps categorization between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Category’ column based on Apple Store Category by executing  .replace command. See an example as follows:
 
-    gps_data['Category'].replace('BEAUTY', 'LIFESTYLE',inplace=True)
+        gps_data['Category'].replace('BEAUTY', 'LIFESTYLE',inplace=True)
 
-2.	The Apps ‘Content Rating’ between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Content Rating’ column based on Apple Store Content Rating by executing  .replace command. See an example as follows:
+    2.	The Apps ‘Content Rating’ between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Content Rating’ column based on Apple Store Content Rating by executing  .replace command. See an example as follows:
 
-    gps_data['Content_Rating'].replace('Adults only 18+', '17+', inplace=True)
+        gps_data['Content_Rating'].replace('Adults only 18+', '17+', inplace=True)
 
-3.	In order to align with Google Play Store data, using a Lambda function, updated the ‘Type’ column in the Apple Store Apps data  as ‘Free or Paid’, based on the App Price = 0 or not respectively.
+    3.	In order to align with Google Play Store data, using a Lambda function, updated the ‘Type’ column in the Apple Store Apps data  as ‘Free or Paid’, based on the App Price = 0 or not respectively.
 
-4.	Executed an aggregation function using NumPy on both Apple Store and Google Play Store Apps data to arrive at summary level detail for Average Price, Average User Rating and Average Rating Count.  This aggregation was done at Category / Type / Content Rating.  Here is the example:
+    4.	Executed an aggregation function using NumPy on both Apple Store and Google Play Store Apps data to arrive at summary level detail for Average Price, Average User Rating and Average Rating Count.  This aggregation was done at Category / Type / Content Rating.  Here is the example:
 
-    gps_data2=pd.pivot_table(gps_data1, index=['App_Store','Category','Type', 'Content_Rating'],values=['App_Price','User_Rating','Review_count'],aggfunc = np.average)
+        gps_data2=pd.pivot_table(gps_data1, index=['App_Store','Category','Type', 'Content_Rating'],values=['App_Price','User_Rating','Review_count'],aggfunc = np.average)
 
-5.	After these transformations, exported the transformed Apps Detail files as well as Apps Summary files (for both Apple Store and Google Play Store) back into a .csv file format.  These files were processed as input part of the ‘Load’ process.
+    5.	After these transformations, exported the transformed Apps Detail files as well as Apps Summary files (for both Apple Store and Google Play Store) back into a .csv file format.  These files were processed as input part of the ‘Load’ process.
 
 
 ## Project Plan
