@@ -18,7 +18,7 @@ The ever-changing mobile landscape is a challenging space to navigate.  The perc
         a.	Make sure MongoDB Compass is installed
         b.	Launch mongod on Gitbash.
         c.	Launch Terminal or command line to run the python file mentioned below:
-        i.	Confluence_Apps.py
+                i.	Confluence_Apps.py
         d.	Once script has run to success launch MongoDB Compass
         e.	Now you should  be able to see following DB and collections:
                     
@@ -84,38 +84,38 @@ In order to build our final collections/database, we had to perform the followin
     1.	Visual inspection of data 
     2.	Verified the file contents with the head () method. 
     3.	Dealt with missing data 
-        a.	Dropped columns that have a high incidence of missing data
-        b.	Added in default value for the missing columns
-        c.	Invoked Lambda function to replace any values other than Alphanumeric and special characters with SPACES. Application_Name field contained nonstandard characters as some of the apps were intended for non-English speaking audience. This step allowed further processing of file in Transform and Load processes.  
+        a.Dropped columns that have a high incidence of missing data
+        b.Added in default value for the missing columns
+        c.Invoked Lambda function to replace any values other than Alphanumeric and special characters with SPACES. Application_Name field contained nonstandard characters as some of the apps were intended for non-English speaking audience. This step allowed further processing of file in Transform and Load processes.  
     4.	Removed incomplete rows
-        a.	Deleted any rows that have a missing value. This will avoid errors in the Transformation and Load process.
-        b.	Based on the utility of the final database, the structures of Apple app dataset and Google app dataset are aligned by bringing only selective columns into the dataframe.
+        a.Deleted any rows that have a missing value. This will avoid errors in the Transformation and Load process.
+        b.Based on the utility of the final database, the structures of Apple app dataset and Google app dataset are aligned by bringing only selective columns into the dataframe.
     5.	Normalized data types
-        a.	Formatting columns to appropriate data type for father processing in Transformation and Load process. 
-        b.	Type ()
+        a.Formatting columns to appropriate data type for father processing in Transformation and Load process. 
+        b.Type ()
     6.	Renamed columns
-        a.	Rename columns to more user-friendly names. DataFrame.rename(columns = {})
+        a.Rename columns to more user-friendly names. DataFrame.rename(columns = {})
     7.	Saved results
-        a.	After data clean-up, exported data back into CSV format for further processing in another program
+        a.After data clean-up, exported data back into CSV format for further processing in another program
 
 
 ### [2] Data transformation steps performed [Apps_Data_transformation.ipynb]:
 
-    1.	The Apps categorization between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Category’ column based on Apple Store Category by executing  .replace command. See an example as follows:
+    1.The Apps categorization between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Category’ column based on Apple Store Category by executing  .replace command. See an example as follows:
 
         gps_data['Category'].replace('BEAUTY', 'LIFESTYLE',inplace=True)
 
-    2.	The Apps ‘Content Rating’ between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Content Rating’ column based on Apple Store Content Rating by executing  .replace command. See an example as follows:
+    2.The Apps ‘Content Rating’ between Apple Store and Google Play Store was different. Realigned Google Play Store ‘Content Rating’ column based on Apple Store Content Rating by executing  .replace command. See an example as follows:
 
         gps_data['Content_Rating'].replace('Adults only 18+', '17+', inplace=True)
 
-    3.	In order to align with Google Play Store data, using a Lambda function, updated the ‘Type’ column in the Apple Store Apps data  as ‘Free or Paid’, based on the App Price = 0 or not respectively.
+    3.In order to align with Google Play Store data, using a Lambda function, updated the ‘Type’ column in the Apple Store Apps data  as ‘Free or Paid’, based on the App Price = 0 or not respectively.
 
-    4.	Executed an aggregation function using NumPy on both Apple Store and Google Play Store Apps data to arrive at summary level detail for Average Price, Average User Rating and Average Rating Count.  This aggregation was done at Category / Type / Content Rating.  Here is the example:
+    4.Executed an aggregation function using NumPy on both Apple Store and Google Play Store Apps data to arrive at summary level detail for Average Price, Average User Rating and Average Rating Count.  This aggregation was done at Category / Type / Content Rating.  Here is the example:
 
         gps_data2=pd.pivot_table(gps_data1, index=['App_Store','Category','Type', 'Content_Rating'],values=['App_Price','User_Rating','Review_count'],aggfunc = np.average)
 
-    5.	After these transformations, exported the transformed Apps Detail files as well as Apps Summary files (for both Apple Store and Google Play Store) back into a .csv file format.  These files were processed as input part of the ‘Load’ process.
+    5.After these transformations, exported the transformed Apps Detail files as well as Apps Summary files (for both Apple Store and Google Play Store) back into a .csv file format.  These files were processed as input part of the ‘Load’ process.
 
 
 ## Project Plan
